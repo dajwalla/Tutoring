@@ -7,12 +7,14 @@ typedef struct node{
 	struct node *next;
 } node;
 
+
 node *new_node(char *data){
 	node *out = calloc(1, sizeof(node));
 	out->data = strdup(data);
 	out->next = NULL;
 	return out;
 }
+
 
 node *add_node(char *data, node *in){
 	node *new = new_node(data);
@@ -21,12 +23,16 @@ node *add_node(char *data, node *in){
 	
 }
 
+//Changed from trying to free linked list iteratively to recursively
+//freeing both the data and the node itself
+//This is to illustrate Valgrind output and how we can use it 
+//to pinpoint where we are creating a seg_fault or leaking memory
 void free_ll(node *ll){
-	
-	while(ll){
-		
+
+	if(ll){
+		free(ll->data);
+		free_ll(ll->next);
 		free(ll);
-		ll = ll->next;
 
 	}
 }
